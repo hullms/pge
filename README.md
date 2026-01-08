@@ -1,3 +1,3 @@
 # PGE Project
 
-A C project for pixel graphics engine.
+chaque groupe créer un readme personnalisé dans sa branche
