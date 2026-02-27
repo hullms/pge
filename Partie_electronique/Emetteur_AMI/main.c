@@ -3,9 +3,9 @@
 #include "Initialisation_pin_timer.h"
 
 /***  prototypes ***/
-void envoie_plus_1_logique(void);
-void envoie_moins_1_logique(void);
-void envoie_0_logique(void);
+void envoie_plus_0_logique(void);
+void envoie_moins_0_logique(void);
+void envoie_1_logique(void);
 void ligne_etat_idle(void);
 void envoie_octet(uint8_t  case_tableau);
 
@@ -25,8 +25,8 @@ int main(void)
 }
 
 
-// cette fonction envoie un +1 logique --> L1 = +5V (PA0 = 1 , PA1 = 0) , L2 = -5V (PA4 = 0 ,PB0 = 1)
-void envoie_plus_1_logique(void)
+// cette fonction envoie un +0 logique --> L1 = +5V (PA0 = 1 , PA1 = 0) , L2 = -5V (PA4 = 0 ,PB0 = 1)
+void envoie_plus_0_logique(void)
 {
 	etat_pin_PA0(HIGH);
 	etat_pin_PA1(LOW);
@@ -34,8 +34,8 @@ void envoie_plus_1_logique(void)
 	etat_pin_PB0(HIGH);
 }
 
-// cette fonction envoie -1 logique --> L1 = -5V (PA0 = 0, PA1 = 1), L2 = 5V (PA4 = 1, PB0 = 0)
-void envoie_moins_1_logique(void)
+// cette fonction envoie -0 logique --> L1 = -5V (PA0 = 0, PA1 = 1), L2 = 5V (PA4 = 1, PB0 = 0)
+void envoie_moins_0_logique(void)
 {
 	etat_pin_PA0(LOW);
 	etat_pin_PA1(HIGH);
@@ -43,8 +43,8 @@ void envoie_moins_1_logique(void)
 	etat_pin_PB0(LOW);
 }
 
-// cette fonction envoie 0 logique --> L1 = 0V (PA0 = 0, PA1 = 0), L2 = 0V (PA4 = 0, PB0 = 0)
-void envoie_0_logique(void)
+// cette fonction envoie 1 logique --> L1 = 0V (PA0 = 0, PA1 = 0), L2 = 0V (PA4 = 0, PB0 = 0)
+void envoie_1_logique(void)
 {
 	etat_pin_PA0(LOW);
 	etat_pin_PA1(LOW);
@@ -61,7 +61,7 @@ void ligne_etat_idle(void)
 	etat_pin_PB0(LOW);
 }
 
-// envoyer un octet su la ligne ( LSB d'abord)
+// envoyer un octet su la ligne ( bit LSB envoyé en premier)
 void envoie_octet(uint8_t  case_tableau)
 {
 	uint8_t i = 0;
@@ -70,28 +70,31 @@ void envoie_octet(uint8_t  case_tableau)
 	for(i = 0 ; i < 8 ; i++)
 	{
 	    valeur_bit = case_tableau & (1 << i);
-	    // envoie de +1 ou -1 logique
-	    if(valeur_bit != 0)
+	    // envoie de +0 ou -0 logique
+	    if(valeur_bit == 0)
 	      {
 	        	if(change_polarite)
 	        	{
-	        		envoie_moins_1_logique();
+	        		envoie_moins_0_logique();
 	        		change_polarite = 0;
 	        	}
 	        	else
 	        	{
-	        		envoie_plus_1_logique();
+	        		envoie_plus_0_logique();
 	        		change_polarite = 1;
 	        	}
+			   delay_us(9);// delay de 9us + 1us de temps d'écriture dans les registres
+	   		   ligne_etat_idle();
+	    	   delay_us(9);
 	      }
 
-	     // envoie 0 logique
+	     // envoie 1 logique
 	     else
 	     {
-	    	 envoie_0_logique();
+	    	 envoie_1_logique();
+			 delay_us(19);// delay de 19us + 1us de temps d'écriture dans les registres
 	     }
-	    delay_us(9);// delay de 9us + 1us de temps d'écriture dans les registres
-	    ligne_etat_idle();
-	    delay_us(9);
+	   
 	 }
 }
+
