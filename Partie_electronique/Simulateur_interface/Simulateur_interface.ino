@@ -4,13 +4,20 @@
   pin TX ---> 
   pin RX --->
 */
+// commandes pour récupérer les messges des sorties SBI
 #define CMD_SBIB       0xC0 // commande pour demander les trames de la sortie SBI vers balise
 #define CMD_SBIM1      0xD0 // commande pour demander les trames de la sortie SBI maintenance 1
 #define CMD_SBIM2      0xD4 // commande pour demander les trames de la sortie SBI maintenance 2
 #define CMD_SBIM3      0xD8 // commande pour demander les trames de la sortie SBI maintenance 3
 #define CMD_SBIM4      0xDC // commande pour demander les trames de la sortie SBI maintenance 4
-#define CMD_UCS        0xE0 // commande pour demander les trames de la sortie UCS de maintenance
 #define CMD_test_train 0xF0 // commande pour simuler le passage du train
+
+// commandes pour récupérer les messages de la sortie UCS 
+#define CMD_AFF_CONFIG     0xE0 // Affichage configuration 
+#define CMD_INCIDENTS_T    0xE4 // Lecture des incidents 
+#define CMD_ETAT_ENTREES   0xE8 // Etat des entrees
+#define CMD_EFF_MEMOIRE    0xEC // Effacement memoire
+
 
 #define MAX_PACKET_SIZE 24
 #define TIMEOUT_MS 10   // temps d'attente entre 2 octets
@@ -90,7 +97,7 @@ void loop()
     receptionEnCours = false;
     attente_commande = true;
 
-    afficher_menu();
+    //afficher_menu();
   }
 }
 
@@ -103,8 +110,11 @@ void envoie_commande_vers_stm(uint8_t commande)
     case 2 : Serial1.write(CMD_SBIM2); break;
     case 3 : Serial1.write(CMD_SBIM3); break;
     case 4 : Serial1.write(CMD_SBIM4); break;  
-    case 5 : Serial1.write(CMD_UCS); break;
-    case 6 : Serial1.write(CMD_test_train); break;
+    case 5 : Serial1.write(CMD_AFF_CONFIG); break;     
+    case 6 : Serial1.write(CMD_INCIDENTS_T); break;    
+    case 7 : Serial1.write(CMD_ETAT_ENTREES); break;   
+    case 8 : Serial1.write(CMD_EFF_MEMOIRE); break;    
+    case 9 : Serial1.write(CMD_test_train); break;     
     default:
       Serial.println("Commande invalide !");
       break;
@@ -119,8 +129,11 @@ void afficher_menu()
   Serial.println("2 : SBIM2");
   Serial.println("3 : SBIM3");
   Serial.println("4 : SBIM4");
-  Serial.println("5 : UCS");
-  Serial.println("6 : TEST TRAIN");
+  Serial.println("5 : Affichage configuration");
+  Serial.println("6 : Lecture des incidents");
+  Serial.println("7 : Etat des entrees");
+  Serial.println("8 : Effacement memoire");
+  Serial.println("9 : Simulation passage train");
   Serial.println("==========================");
   Serial.println("Choisir un numero : ");
 }
