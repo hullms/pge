@@ -5,12 +5,6 @@ Ce dossier regroupe les éléments de simulation sous **LTspice** utilisés pour
 - le **schéma LTspice de l’émetteur AMI** ;
 - les **modèles SPICE** des différents composants employés dans les simulations.
 
-## Contenu
-
-- Schéma LTspice — **Récepteur AMI**
-- Schéma LTspice — **Émetteur AMI**
-- **Models SPICE** des composants (comparateur, AOP, etc.)
-
 ## Notes sur la simulation du récepteur AMI (important)
 
 Dans le **récepteur AMI**, les éléments logiques (notamment les **bascules D** et les **portes XOR**) utilisés dans la simulation sont des composants **standards LTspice**.
